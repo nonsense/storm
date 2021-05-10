@@ -1,0 +1,29 @@
+[metadata]
+name    = "storm"
+author  = "ave"
+
+[global]
+plan    = "storm"
+case    = "storm"
+builder = "docker:go"
+runner  = "cluster:k8s"
+total_instances = 2
+
+[global.build_config]
+push_registry=true
+go_proxy_mode="remote"
+go_proxy_url="http://localhost:8081"
+registry_type="aws"
+
+[global.run_config]
+
+[[groups]]
+id = "first"
+instances = { count = 2 }
+
+  [groups.run.test_params]
+  conn_count = '1'
+  conn_outgoing = '1'
+  conn_delay_ms = '3000'
+  concurrent_dials = '1'
+  data_size_mb     = '1000'

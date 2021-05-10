@@ -1,0 +1,33 @@
+name = "storm"
+# hashicorp/go-getter URLs, so in the future we can support fetching test plans
+# from GitHub.
+source_path = "file://${TESTGROUND_SRCDIR}/plans/storm"
+
+[defaults]
+builder = "docker:go"
+runner = "cluster:k8s"
+
+[builders."docker:go"]
+enabled = true
+go_version = "1.13"
+module_path = "github.com/ipfs/testground/plans/dht"
+exec_pkg = "."
+
+[runners."cluster:k8s"]
+enabled = true
+
+[runners."local:docker"]
+enabled = true
+
+[[testcases]]
+name = "storm"
+instances = { min = 1, max = 100000, default = 5 }
+
+  [testcases.params]
+  conn_count       = { type = "int", desc = "number of TCP sockets to open", default = 5 }
+  conn_outgoing    = { type = "int", desc = "number of outgoing TCP dials", default = 5 }
+  conn_delay       = { type = "int", desc = "", default = 30000 }
+  concurrent_dials = { type = "int", desc = "", default = 10 }
+  data_size_mb     = { type = "int", desc = "", default = 100 }
+
+
